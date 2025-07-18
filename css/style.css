@@ -342,6 +342,18 @@ body {
     transform: translateY(0);
 }
 
+/* モバイルではアニメーションを無効化 */
+@media (max-width: 768px) {
+    .slide-subtitle,
+    .slide-description,
+    .hotel-item,
+    .title-line span {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
 /* アディショナルアニメーション */
 .shimmer-effect {
     position: relative;
@@ -516,6 +528,15 @@ body {
 .hotel-item:nth-child(2) { transition-delay: 0.3s; }
 .hotel-item:nth-child(3) { transition-delay: 0.4s; }
 .hotel-item:nth-child(4) { transition-delay: 0.5s; }
+
+/* モバイルではホテルアイテムを常に表示 */
+@media (max-width: 768px) {
+    .hotel-item {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
 
 .hotel-item__image {
     position: relative;
@@ -758,12 +779,54 @@ body {
 
 /* レスポンシブ */
 @media (max-width: 768px) {
+    html {
+        overflow: auto;
+    }
+
+    body {
+        height: auto !important;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .header {
         padding: 1.5rem 2rem;
+        position: fixed;
+        background: rgba(17, 17, 17, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1001;
     }
 
     .site-title {
         font-size: 1.5rem;
+    }
+
+    .scroll {
+        position: static;
+        height: auto;
+        overflow: visible;
+    }
+
+    .scroll-content {
+        position: static;
+        transform: none !important;
+        flex-direction: column;
+        height: auto;
+        display: block;
+    }
+
+    .slide {
+        width: 100vw;
+        min-width: 100vw;
+        height: auto;
+        min-height: 100vh;
+        padding: 100px 0 50px;
+        display: block;
+    }
+
+    .slide--wide {
+        width: 100vw;
+        min-width: 100vw;
     }
 
     .slide-inner {
@@ -815,13 +878,17 @@ body {
     .hotels-wrapper {
         flex-direction: column;
         padding: 2rem;
-        overflow-y: auto;
+        overflow: visible;
         gap: 1.5rem;
+        height: auto;
     }
 
     .hotel-item {
         flex: 0 0 auto;
         max-width: 100%;
+        margin-bottom: 2rem;
+        opacity: 1 !important;
+        transform: none !important;
     }
 
     .hotel-item__image img {
@@ -833,36 +900,37 @@ body {
     }
 
     .scrollbar {
-        left: 2rem;
-        right: 2rem;
+        display: none;
     }
 
     .more-articles-button {
         padding: 1rem 2.5rem;
         font-size: 1rem;
+        margin-bottom: 2rem;
     }
 
-    /* スマホでは横スクロールを無効化 */
-    body {
-        height: auto !important;
+    .loader-text {
+        font-size: 3rem;
     }
 
-    .scroll-content {
-        position: static;
-        transform: none !important;
-        flex-direction: column;
-        height: auto;
+    /* タッチ操作の最適化 */
+    .hotel-item__link,
+    .menu-link,
+    .more-articles-button {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
     }
 
-    .slide {
-        width: 100vw;
-        min-width: 100vw;
-        height: 100vh;
-        min-height: 100vh;
+    .menu-btn {
+        padding: 10px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
     }
 
-    .slide--wide {
-        width: 100vw;
-        min-width: 100vw;
+    /* iOS Safari対応 */
+    @supports (-webkit-touch-callout: none) {
+        .slide {
+            min-height: -webkit-fill-available;
+        }
     }
 }

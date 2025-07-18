@@ -2,13 +2,18 @@
 let isLoading = true;
 let currentSlide = 0;
 let isScrolling = false;
+let isMobile = window.innerWidth <= 768;
+let mobileScrollObserver = null;
 
 // 初期化
 document.addEventListener('DOMContentLoaded', function() {
+    isMobile = window.innerWidth <= 768;
     initLoader();
     initMenu();
     initSlideAnimations();
-    initTiltEffect();
+    if (!isMobile) {
+        initTiltEffect();
+    }
     initParticleEffects();
     initImageErrorHandling();
 });
@@ -24,8 +29,12 @@ function initLoader() {
         }
         isLoading = false;
         
-        // 横スクロールを初期化
-        initHorizontalScroll();
+        // スクロールを初期化
+        if (isMobile) {
+            initMobileScroll();
+        } else {
+            initHorizontalScroll();
+        }
         
         // 最初のスライドをアクティブに
         const firstSlide = document.querySelector('.js-slide');
@@ -67,11 +76,20 @@ function initMenu() {
             const targetSlide = document.querySelector(`#${targetId}`);
             
             if (targetSlide) {
-                const slides = Array.from(document.querySelectorAll('.js-slide'));
-                const targetIndex = slides.indexOf(targetSlide);
-                
-                if (targetIndex !== -1) {
-                    scrollToSlide(targetIndex);
+                if (isMobile) {
+                    // モバイルでは通常のスクロール
+                    targetSlide.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                } else {
+                    // デスクトップでは横スクロール
+                    const slides = Array.from(document.querySelectorAll('.js-slide'));
+                    const targetIndex = slides.indexOf(targetSlide);
+                    
+                    if (targetIndex !== -1) {
+                        scrollToSlide(targetIndex);
+                    }
                 }
             }
             
@@ -82,7 +100,51 @@ function initMenu() {
     });
 }
 
-// 横スクロール
+// モバイル用スクロール初期化
+function initMobileScroll() {
+    const slides = document.querySelectorAll('.js-slide');
+    
+    if (slides.length === 0) return;
+    
+    // Intersection Observer でスライドのアクティブ状態を管理
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -20% 0px',
+        threshold: 0.5
+    };
+    
+    mobileScrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // 前のアクティブスライドを非アクティブに
+                const currentActiveSlide = document.querySelector('.js-slide.is-active');
+                if (currentActiveSlide) {
+                    currentActiveSlide.classList.remove('is-active');
+                }
+                
+                // 新しいスライドをアクティブに
+                entry.target.classList.add('is-active');
+                
+                // 現在のスライドインデックスを更新
+                const slideIndex = Array.from(slides).indexOf(entry.target);
+                currentSlide = slideIndex;
+            }
+        });
+    }, observerOptions);
+    
+    // 各スライドを監視
+    slides.forEach(slide => {
+        mobileScrollObserver.observe(slide);
+    });
+    
+    // 最初のスライドを即座にアクティブに
+    if (slides[0]) {
+        slides[0].classList.add('is-active');
+        // モバイルではアニメーションをトリガーしない
+    }
+}
+
+// 横スクロール（デスクトップ用）
 function initHorizontalScroll() {
     const scrollContainer = document.querySelector('[data-scroll]');
     const scrollContent = document.querySelector('[data-scroll-content]');
@@ -282,8 +344,62 @@ function initSlideAnimations() {
     
 }
 
-// チルト効果
+// スライドアニメーションをトリガー
+function triggerSlideAnimations(slide) {
+    // モバイルでは画像が消えないようにアニメーションを制限
+    if (!isMobile) {
+        // デスクトップでのアニメーション
+        const titleSpans = slide.querySelectorAll('.title-line span');
+        titleSpans.forEach((span, index) => {
+            span.style.transform = 'translateY(100%)';
+            setTimeout(() => {
+                span.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                span.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+        
+        // サブタイトルとディスクリプション
+        const subtitle = slide.querySelector('.slide-subtitle');
+        const description = slide.querySelector('.slide-description');
+        
+        if (subtitle) {
+            subtitle.style.opacity = '0';
+            subtitle.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                subtitle.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                subtitle.style.opacity = '1';
+                subtitle.style.transform = 'translateY(0)';
+            }, 300);
+        }
+        
+        if (description) {
+            description.style.opacity = '0';
+            description.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                description.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                description.style.opacity = '1';
+                description.style.transform = 'translateY(0)';
+            }, 500);
+        }
+        
+        // ホテルアイテムのアニメーション
+        const hotelItems = slide.querySelectorAll('.hotel-item');
+        hotelItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                item.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, 200 + (index * 100));
+        });
+    }
+}
+
+// チルト効果（デスクトップのみ）
 function initTiltEffect() {
+    if (isMobile) return;
+    
     const tiltElements = document.querySelectorAll('.js-tilt');
     
     if (tiltElements.length === 0) return;
@@ -344,8 +460,34 @@ let resizeTimer;
 window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function() {
-        // 横スクロールを再初期化
-        initHorizontalScroll();
+        const wasMobile = isMobile;
+        isMobile = window.innerWidth <= 768;
+        
+        // モバイル/デスクトップ切り替え時の処理
+        if (wasMobile !== isMobile) {
+            // 既存のObserverを削除
+            if (mobileScrollObserver) {
+                mobileScrollObserver.disconnect();
+                mobileScrollObserver = null;
+            }
+            
+            // 適切なスクロールを再初期化
+            if (isMobile) {
+                // デスクトップからモバイルに切り替え
+                document.body.style.height = 'auto';
+                const scrollContent = document.querySelector('[data-scroll-content]');
+                if (scrollContent) {
+                    scrollContent.style.transform = 'none';
+                }
+                initMobileScroll();
+            } else {
+                // モバイルからデスクトップに切り替え
+                initHorizontalScroll();
+            }
+        } else if (!isMobile) {
+            // デスクトップでのリサイズ
+            initHorizontalScroll();
+        }
     }, 250);
 });
 
