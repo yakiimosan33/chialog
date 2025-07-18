@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ちあログ - マダムおすすめのちょっといい宿</title>
+    <meta name="description" content="夏の旅行のお宿はお決まりですか？まだの方は「ちあログ」で検索！マダムおすすめのちょっといい宿揃えております。">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ローディング画面 -->
+    <div class="loader js-loader">
+        <div class="loader-text">CHIA LOG</div>
+    </div>
+
+    <!-- トランジションマスク -->
+    <div class="mask js-mask">
+        <div class="mask__slice js-mask__slice"></div>
+        <div class="mask__slice js-mask__slice"></div>
+        <div class="mask__slice js-mask__slice"></div>
+    </div>
+
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="header-inner">
+            <h1 class="site-title">ちあログ</h1>
+            <nav class="nav">
+                <button class="menu-btn js-menu-btn">
+                    <span class="menu-btn__line"></span>
+                    <span class="menu-btn__line"></span>
+                    <span class="menu-btn__line"></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- フルスクリーンメニュー -->
+    <div class="fullscreen-menu js-fullscreen-menu">
+        <ul class="menu-list">
+            <li><a href="#about" class="menu-link js-menu-link">ちあログとは</a></li>
+            <li><a href="#recommend" class="menu-link js-menu-link">おすすめの宿</a></li>
+            <li><a href="#more-articles" class="menu-link js-menu-link">もっと記事を読む</a></li>
+        </ul>
+    </div>
+
+    <!-- 横スクロールコンテナ -->
+    <div class="scroll" data-scroll>
+        <div class="scroll-content" data-scroll-content>
+            <div class="scroll-content--last" data-scroll-content></div>
+
+            <!-- スライド1: ヒーロー -->
+            <article class="slide js-slide" id="hero">
+                <div class="slide-inner">
+                    <div class="slide-content">
+                        <h2 class="slide-title js-title">
+                            <span class="title-line">皆様、夏の旅行の</span>
+                            <span class="title-line">お宿はお決まりですか？</span>
+                        </h2>
+                        <p class="slide-subtitle js-subtitle">まだの方は「ちあログ」で検索！</p>
+                        <div class="slide-description js-description">
+                            <p>マダムおすすめの<br>ちょっといい宿揃えております。</p>
+                        </div>
+                    </div>
+                    <div class="slide-visual js-visual">
+                        <video class="hero-video" autoplay muted loop playsinline>
+                            <source src="images/main_movie.mp4" type="video/mp4">
+                        </video>
+                        <div class="visual-overlay"></div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- スライド2: About -->
+            <article class="slide js-slide" id="about">
+                <div class="slide-inner">
+                    <div class="slide-header">
+                        <h2 class="slide-number">01</h2>
+                        <h3 class="slide-label">About</h3>
+                    </div>
+                    <div class="slide-content">
+                        <h2 class="slide-title js-title">
+                            <span class="title-line">温泉ソムリエ</span>
+                            <span class="title-line">Chiakiの宿泊記</span>
+                        </h2>
+                        <div class="slide-description js-description">
+                            <p>はじめまして、温泉ソムリエのChiakiです。</p>
+                            <p>旅が好きな夫と一緒に、年に何度か各地のホテルや旅館に宿泊しています。</p>
+                            <p>観光せず直接行ってお部屋でずっとゆっくり過ごせるような宿を選んでいます。</p>
+                        </div>
+                    </div>
+                    <div class="slide-visual js-visual">
+                        <div class="profile-image-container">
+                            <img src="images/profile.webp" alt="Chiaki" class="profile-image js-tilt">
+                        </div>
+                        <div class="visual-content">
+                            <p class="visual-text">これから旅に出られる方の<br>宿選びの参考にしていただけたら嬉しいです。</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- スライド3: おすすめの宿 -->
+            <article class="slide js-slide slide--wide" id="recommend">
+                <div class="slide-inner">
+                    <div class="slide-header">
+                        <h2 class="slide-number">02</h2>
+                        <h3 class="slide-label">Hotels</h3>
+                    </div>
+                    <div class="hotels-wrapper">
+                        <!-- 宿1 -->
+                        <div class="hotel-item js-hotel-item" data-category="ocean">
+                            <a href="https://chia-log.com/umito-voyage-atami/" target="_blank" class="hotel-item__link">
+                                <div class="hotel-item__image js-tilt">
+                                    <img src="images/umigamieru.webp" alt="UMITO VOYAGE ATAMI" loading="lazy">
+                                    <div class="hotel-item__overlay">
+                                        <span class="hotel-badge">海が見える</span>
+                                    </div>
+                                </div>
+                                <div class="hotel-item__content">
+                                    <h3 class="hotel-name">UMITO VOYAGE ATAMI</h3>
+                                    <p class="hotel-location">静岡県 熱海市</p>
+                                    <p class="hotel-description">青い海と初島を望む絶景。</p>
+                                    <span class="hotel-link-text">詳細を見る →</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 宿2 -->
+                        <div class="hotel-item js-hotel-item" data-category="mountain">
+                            <a href="https://chia-log.com/kogetsu/" target="_blank" class="hotel-item__link">
+                                <div class="hotel-item__image js-tilt">
+                                    <img src="images/fujigamieru.webp" alt="秀峰閣湖月" loading="lazy">
+                                    <div class="hotel-item__overlay">
+                                        <span class="hotel-badge">富士山が見える</span>
+                                    </div>
+                                </div>
+                                <div class="hotel-item__content">
+                                    <h3 class="hotel-name">秀峰閣湖月</h3>
+                                    <p class="hotel-location">山梨県 河口湖</p>
+                                    <p class="hotel-description">日本の美を感じる贅沢なひととき。</p>
+                                    <span class="hotel-link-text">詳細を見る →</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 宿3 -->
+                        <div class="hotel-item js-hotel-item" data-category="forest">
+                            <a href="https://chia-log.com/futarikomorebi-info/" target="_blank" class="hotel-item__link">
+                                <div class="hotel-item__image js-tilt">
+                                    <img src="images/hutari.webp" alt="ふたり木もれ陽" loading="lazy">
+                                    <div class="hotel-item__overlay">
+                                        <span class="hotel-badge">木もれ陽の宿</span>
+                                    </div>
+                                </div>
+                                <div class="hotel-item__content">
+                                    <h3 class="hotel-name">ふたり木もれ陽</h3>
+                                    <p class="hotel-location">伊豆高原</p>
+                                    <p class="hotel-description">自然に包まれた癒しの空間。</p>
+                                    <span class="hotel-link-text">詳細を見る →</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- 宿4 -->
+                        <div class="hotel-item js-hotel-item" data-category="luxury">
+                            <a href="https://chia-log.com/the-shinra/" target="_blank" class="hotel-item__link">
+                                <div class="hotel-item__image js-tilt">
+                                    <img src="images/ragu.webp" alt="THE SHINRA" loading="lazy">
+                                    <div class="hotel-item__overlay">
+                                        <span class="hotel-badge">ラグジュアリー</span>
+                                    </div>
+                                </div>
+                                <div class="hotel-item__content">
+                                    <h3 class="hotel-name">THE SHINRA 森羅</h3>
+                                    <p class="hotel-location">山梨県 富士河口湖町</p>
+                                    <p class="hotel-description">極上のプライベート空間。</p>
+                                    <span class="hotel-link-text">詳細を見る →</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- スライド4: もっと記事を読む -->
+            <article class="slide js-slide" id="more-articles">
+                <div class="slide-inner">
+                    <div class="slide-header">
+                        <h2 class="slide-number">03</h2>
+                        <h3 class="slide-label">More</h3>
+                    </div>
+                    <div class="slide-content">
+                        <h2 class="slide-title js-title">
+                            <span class="title-line">もっと記事を</span>
+                            <span class="title-line">読んでみる</span>
+                        </h2>
+                        <div class="more-articles-info js-description">
+                            <p>ここで紹介した宿以外にも、<br>たくさんの素敵な宿をご紹介しています。</p>
+                            <p class="more-articles-message">温泉ソムリエChiakiの宿泊記で、<br>あなたの次の旅を見つけてみませんか？</p>
+                            <a href="https://chia-log.com/" target="_blank" class="more-articles-button js-more-articles-button">ちあログを読む →</a>
+                        </div>
+                    </div>
+                    <div class="slide-visual js-visual">
+                        <div class="visual-text">&copy; 2024 ちあログ</div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        </div>
+        
+        <!-- スクロールバー -->
+        <div class="scrollbar" data-scrollbar>
+            <div class="scrollbar__handle js-scrollbar__handle"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

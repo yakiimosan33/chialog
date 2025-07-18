@@ -1,0 +1,868 @@
+/* リセットCSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* カスタムプロパティ */
+:root {
+    --color-bg: #111111;
+    --color-primary: #FF4F4F;
+    --color-text: #ffffff;
+    --color-text-light: #999999;
+    --color-accent: #a28d69;
+    --font-primary: 'Bebas Neue', 'Noto Sans JP', sans-serif;
+    --font-secondary: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+    --transition: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ベーススタイル */
+html {
+    font-size: 16px;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-secondary);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/* ローディング画面 */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+.loader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-text {
+    font-family: var(--font-primary);
+    font-size: 4rem;
+    letter-spacing: 0.2em;
+    color: var(--color-primary);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+/* トランジションマスク */
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    pointer-events: none;
+    display: flex;
+}
+
+.mask__slice {
+    flex: 1;
+    background-color: var(--color-primary);
+    transform: translateY(-100%);
+}
+
+/* ヘッダー */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 2rem 4rem;
+    mix-blend-mode: difference;
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-title {
+    font-family: var(--font-primary);
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--color-text);
+}
+
+/* メニューボタン */
+.menu-btn {
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.menu-btn__line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-text);
+    transition: all 0.3s var(--transition);
+}
+
+.menu-btn__line:nth-child(1) { top: 8px; }
+.menu-btn__line:nth-child(2) { top: 19px; }
+.menu-btn__line:nth-child(3) { top: 30px; }
+
+.menu-btn.is-active .menu-btn__line:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+}
+
+.menu-btn.is-active .menu-btn__line:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-btn.is-active .menu-btn__line:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}
+
+/* フルスクリーンメニュー */
+.fullscreen-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(17, 17, 17, 0.98);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s var(--transition);
+}
+
+.fullscreen-menu.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu-list {
+    list-style: none;
+    text-align: center;
+}
+
+.menu-link {
+    display: block;
+    font-family: var(--font-primary);
+    font-size: 4rem;
+    letter-spacing: 0.1em;
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 1rem 0;
+    transition: all 0.3s var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-primary);
+    transition: left 0.3s var(--transition);
+}
+
+.menu-link:hover {
+    color: var(--color-primary);
+}
+
+.menu-link:hover::after {
+    left: 0;
+}
+
+/* 横スクロールコンテナ */
+.scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.scroll-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    will-change: transform;
+}
+
+.scroll-content--last {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    z-index: -1;
+}
+
+/* スライド共通スタイル */
+.slide {
+    position: relative;
+    width: 100vw;
+    min-width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.slide--wide {
+    width: 150vw;
+    min-width: 150vw;
+}
+
+.slide-inner {
+    width: 100%;
+    padding: 0 4rem;
+    position: relative;
+}
+
+.slide-header {
+    position: absolute;
+    top: 50%;
+    left: 4rem;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+}
+
+.slide-number {
+    font-family: var(--font-primary);
+    font-size: 8rem;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.1);
+    margin: 0;
+}
+
+.slide-label {
+    font-family: var(--font-secondary);
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.slide-content {
+    max-width: 55%;
+    margin-left: 10%;
+    z-index: 1;
+    position: relative;
+}
+
+.slide-title {
+    font-family: var(--font-primary);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+    color: var(--color-text);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#hero .slide-title {
+    font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+}
+
+.title-line {
+    display: block;
+    overflow: hidden;
+}
+
+.title-line span {
+    display: inline-block;
+    transform: translateY(100%);
+    transition: transform 0.8s var(--transition);
+}
+
+.slide.is-active .title-line span {
+    transform: translateY(0);
+}
+
+.slide-subtitle {
+    font-size: 1.3rem;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s var(--transition) 0.3s;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.slide.is-active .slide-subtitle {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.slide-description {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-text-light);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s var(--transition) 0.5s;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.slide.is-active .slide-description {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* アディショナルアニメーション */
+.shimmer-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.2) 50%, 
+        transparent 100%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* パーティクルエフェクト */
+.particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: particle-float 8s infinite ease-in-out;
+}
+
+@keyframes particle-float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+    50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+}
+
+.slide-visual {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.visual-bg {
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #8b7556 100%);
+    border-radius: 10px;
+    opacity: 0.3;
+    display: none;
+}
+
+/* ビデオ背景 */
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    opacity: 0.4;
+    border-radius: 10px;
+    filter: brightness(1.2) saturate(1.3);
+}
+
+.visual-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        rgba(17, 17, 17, 0.6) 0%, 
+        rgba(17, 17, 17, 0.2) 50%,
+        rgba(162, 141, 105, 0.4) 100%);
+    z-index: -1;
+    border-radius: 10px;
+}
+
+.visual-content {
+    text-align: center;
+}
+
+.visual-text {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    opacity: 0.7;
+}
+
+/* プロフィール画像 */
+.profile-image-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--color-primary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s var(--transition);
+    filter: brightness(1.1) saturate(1.2);
+}
+
+.profile-image:hover {
+    border-color: var(--color-accent);
+    transform: scale(1.05);
+}
+
+
+/* ホテルグリッド */
+.hotels-wrapper {
+    display: flex;
+    gap: 2rem;
+    padding: 0 15%;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+}
+
+.hotels-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(162, 141, 105, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 50%, rgba(255, 79, 79, 0.1) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.hotel-item {
+    flex: 0 0 300px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s var(--transition);
+    position: relative;
+}
+
+.slide.is-active .hotel-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hotel-item:nth-child(1) { transition-delay: 0.2s; }
+.hotel-item:nth-child(2) { transition-delay: 0.3s; }
+.hotel-item:nth-child(3) { transition-delay: 0.4s; }
+.hotel-item:nth-child(4) { transition-delay: 0.5s; }
+
+.hotel-item__image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.hotel-item__image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.6s var(--transition);
+}
+
+.hotel-item:hover .hotel-item__image img {
+    transform: scale(1.1);
+}
+
+.hotel-item__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        transparent 0%, 
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.8) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    transition: all 0.3s var(--transition);
+}
+
+.hotel-item:hover .hotel-item__overlay {
+    background: linear-gradient(to bottom, 
+        transparent 0%, 
+        rgba(0, 0, 0, 0.2) 50%,
+        rgba(0, 0, 0, 0.7) 100%);
+}
+
+.hotel-badge {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.hotel-item__content {
+    text-align: center;
+}
+
+.hotel-name {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.hotel-location {
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.hotel-description {
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.hotel-item__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.hotel-link-text {
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s var(--transition);
+}
+
+.hotel-item:hover .hotel-link-text {
+    transform: translateX(5px);
+    color: var(--color-accent);
+}
+
+.hotel-item__image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.6s var(--transition);
+    display: block;
+    background-color: #333;
+    border-radius: 10px;
+}
+
+.hotel-item__image img:not([src]),
+.hotel-item__image img[src=""] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect width="300" height="400" fill="%23333"/><text x="150" y="200" text-anchor="middle" fill="%23999" font-family="Arial">画像を読み込み中...</text></svg>');
+    background-size: cover;
+    background-position: center;
+}
+
+/* 予約サイトリスト */
+.booking-list {
+    margin-top: 3rem;
+}
+
+.booking-item {
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: all 0.3s var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.booking-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-primary);
+    transition: left 0.3s var(--transition);
+    z-index: -1;
+}
+
+.booking-item:hover {
+    color: var(--color-bg);
+    padding-left: 2rem;
+}
+
+.booking-item:hover::before {
+    left: 0;
+}
+
+.booking-number {
+    font-family: var(--font-primary);
+    font-size: 2rem;
+    margin-right: 2rem;
+    color: var(--color-primary);
+}
+
+.booking-name {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.booking-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+}
+
+/* もっと記事を読む */
+.more-articles-info {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.more-articles-message {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    margin: 2rem 0 3rem;
+    color: var(--color-text-light);
+}
+
+.more-articles-button {
+    display: inline-block;
+    padding: 1.2rem 3.5rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    transition: all 0.3s var(--transition);
+    position: relative;
+    overflow: hidden;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(255, 79, 79, 0.3);
+    font-size: 1.1rem;
+}
+
+.more-articles-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+    transition: left 0.3s var(--transition);
+    z-index: -1;
+}
+
+.more-articles-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(255, 79, 79, 0.4);
+}
+
+.more-articles-button:hover::before {
+    left: 0;
+}
+
+/* スクロールバー */
+.scrollbar {
+    position: fixed;
+    bottom: 2rem;
+    left: 4rem;
+    right: 4rem;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.scrollbar__handle {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 100px;
+    height: 6px;
+    background-color: var(--color-primary);
+    border-radius: 3px;
+    transition: transform 0.085s linear;
+    will-change: transform;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .header {
+        padding: 1.5rem 2rem;
+    }
+
+    .site-title {
+        font-size: 1.5rem;
+    }
+
+    .slide-inner {
+        padding: 0 2rem;
+    }
+
+    .slide-content {
+        max-width: 100%;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .slide-header {
+        position: static;
+        transform: none;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .slide-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+        line-height: 1.3;
+        margin-bottom: 1.5rem;
+    }
+
+    .slide-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .slide-description {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .slide-visual {
+        position: static;
+        width: 100%;
+        height: 200px;
+        margin-top: 2rem;
+    }
+
+    .profile-image-container {
+        width: 150px;
+        height: 150px;
+        margin: 1rem auto;
+    }
+
+    .hotels-wrapper {
+        flex-direction: column;
+        padding: 2rem;
+        overflow-y: auto;
+        gap: 1.5rem;
+    }
+
+    .hotel-item {
+        flex: 0 0 auto;
+        max-width: 100%;
+    }
+
+    .hotel-item__image img {
+        height: 250px;
+    }
+
+    .menu-link {
+        font-size: 2.5rem;
+    }
+
+    .scrollbar {
+        left: 2rem;
+        right: 2rem;
+    }
+
+    .more-articles-button {
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+    }
+
+    /* スマホでは横スクロールを無効化 */
+    body {
+        height: auto !important;
+    }
+
+    .scroll-content {
+        position: static;
+        transform: none !important;
+        flex-direction: column;
+        height: auto;
+    }
+
+    .slide {
+        width: 100vw;
+        min-width: 100vw;
+        height: 100vh;
+        min-height: 100vh;
+    }
+
+    .slide--wide {
+        width: 100vw;
+        min-width: 100vw;
+    }
+}
