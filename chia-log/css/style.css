@@ -933,4 +933,14 @@ body {
             min-height: -webkit-fill-available;
         }
     }
+    
+    /* スクロールコンテナの設定を無効化 */
+    .scroll,
+    .scroll-content,
+    .scroll-content--last {
+        position: static !important;
+        transform: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
 }

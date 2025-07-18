@@ -7,7 +7,9 @@ let mobileScrollObserver = null;
 
 // 初期化
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded fired');
     isMobile = window.innerWidth <= 768;
+    console.log('isMobile:', isMobile, 'window width:', window.innerWidth);
     initLoader();
     initMenu();
     initSlideAnimations();
@@ -30,6 +32,7 @@ function initLoader() {
         isLoading = false;
         
         // スクロールを初期化
+        console.log('Initializing scroll, isMobile:', isMobile);
         if (isMobile) {
             initMobileScroll();
         } else {
@@ -102,46 +105,51 @@ function initMenu() {
 
 // モバイル用スクロール初期化
 function initMobileScroll() {
+    console.log('initMobileScroll called');
     const slides = document.querySelectorAll('.js-slide');
+    console.log('Found slides:', slides.length);
     
     if (slides.length === 0) return;
     
-    // Intersection Observer でスライドのアクティブ状態を管理
-    const observerOptions = {
-        root: null,
-        rootMargin: '-20% 0px -20% 0px',
-        threshold: 0.5
-    };
+    // スマホではIntersection Observerの代わりにシンプルなスクロールイベントを使用
+    console.log('Setting up mobile scroll detection');
     
-    mobileScrollObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // 前のアクティブスライドを非アクティブに
-                const currentActiveSlide = document.querySelector('.js-slide.is-active');
-                if (currentActiveSlide) {
-                    currentActiveSlide.classList.remove('is-active');
-                }
-                
-                // 新しいスライドをアクティブに
-                entry.target.classList.add('is-active');
-                
-                // 現在のスライドインデックスを更新
-                const slideIndex = Array.from(slides).indexOf(entry.target);
-                currentSlide = slideIndex;
-            }
-        });
-    }, observerOptions);
-    
-    // 各スライドを監視
-    slides.forEach(slide => {
-        mobileScrollObserver.observe(slide);
-    });
-    
-    // 最初のスライドを即座にアクティブに
+    // 最初のスライドをアクティブに
     if (slides[0]) {
         slides[0].classList.add('is-active');
-        // モバイルではアニメーションをトリガーしない
     }
+    
+    // スクロールイベントでアクティブスライドを切り替え
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const windowHeight = window.innerHeight;
+            
+            slides.forEach((slide, index) => {
+                const slideTop = slide.offsetTop;
+                const slideHeight = slide.offsetHeight;
+                const slideCenter = slideTop + (slideHeight / 2);
+                const windowCenter = scrollTop + (windowHeight / 2);
+                
+                // スライドが画面の中央付近にある場合
+                if (Math.abs(slideCenter - windowCenter) < windowHeight / 3) {
+                    if (!slide.classList.contains('is-active')) {
+                        // 前のアクティブスライドを削除
+                        document.querySelectorAll('.js-slide.is-active').forEach(s => {
+                            s.classList.remove('is-active');
+                        });
+                        
+                        // 新しいスライドをアクティブに
+                        slide.classList.add('is-active');
+                        currentSlide = index;
+                        console.log('Active slide:', index);
+                    }
+                }
+            });
+        }, 50);
+    });
 }
 
 // 横スクロール（デスクトップ用）
