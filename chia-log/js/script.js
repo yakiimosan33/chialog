@@ -1,21 +1,15 @@
 // グローバル変数
 let isLoading = true;
 let currentSlide = 0;
-let isScrolling = false;
-let isMobile = window.innerWidth <= 768;
-let mobileScrollObserver = null;
+
 
 // 初期化
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded fired');
-    isMobile = window.innerWidth <= 768;
-    console.log('isMobile:', isMobile, 'window width:', window.innerWidth);
     initLoader();
     initMenu();
     initSlideAnimations();
-    if (!isMobile) {
-        initTiltEffect();
-    }
+    initTiltEffect();
     initParticleEffects();
     initImageErrorHandling();
 });
@@ -24,30 +18,23 @@ document.addEventListener('DOMContentLoaded', function() {
 function initLoader() {
     const loader = document.querySelector('.js-loader');
     
-    // 画像読み込み完了を待つ
-    setTimeout(() => {
-        if (loader) {
-            loader.classList.add('is-hidden');
-        }
-        isLoading = false;
-        
-        // スクロールを初期化
-        console.log('Initializing scroll, isMobile:', isMobile);
-        if (isMobile) {
-            initMobileScroll();
-        } else {
-            initHorizontalScroll();
-        }
-        
-        // 最初のスライドをアクティブに
-        const firstSlide = document.querySelector('.js-slide');
-        if (firstSlide) {
-            firstSlide.classList.add('is-active');
-        }
-        
-        // ビデオの再生を確認
-        ensureVideoPlayback();
-    }, 1500);
+    if (loader) {
+        loader.classList.add('is-hidden');
+    }
+    isLoading = false;
+    
+    // スクロールを初期化
+    console.log('Initializing scroll');
+    initHorizontalScroll();
+    
+    // 最初のスライドをアクティブに
+    const firstSlide = document.querySelector('.js-slide');
+    if (firstSlide) {
+        firstSlide.classList.add('is-active');
+    }
+    
+    // ビデオの再生を確認
+    ensureVideoPlayback();
 }
 
 // メニュー
@@ -79,20 +66,11 @@ function initMenu() {
             const targetSlide = document.querySelector(`#${targetId}`);
             
             if (targetSlide) {
-                if (isMobile) {
-                    // モバイルでは通常のスクロール
-                    targetSlide.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
-                    });
-                } else {
-                    // デスクトップでは横スクロール
-                    const slides = Array.from(document.querySelectorAll('.js-slide'));
-                    const targetIndex = slides.indexOf(targetSlide);
-                    
-                    if (targetIndex !== -1) {
-                        scrollToSlide(targetIndex);
-                    }
+                const slides = Array.from(document.querySelectorAll('.js-slide'));
+                const targetIndex = slides.indexOf(targetSlide);
+                
+                if (targetIndex !== -1) {
+                    scrollToSlide(targetIndex);
                 }
             }
             
@@ -103,54 +81,7 @@ function initMenu() {
     });
 }
 
-// モバイル用スクロール初期化
-function initMobileScroll() {
-    console.log('initMobileScroll called');
-    const slides = document.querySelectorAll('.js-slide');
-    console.log('Found slides:', slides.length);
-    
-    if (slides.length === 0) return;
-    
-    // スマホではIntersection Observerの代わりにシンプルなスクロールイベントを使用
-    console.log('Setting up mobile scroll detection');
-    
-    // 最初のスライドをアクティブに
-    if (slides[0]) {
-        slides[0].classList.add('is-active');
-    }
-    
-    // スクロールイベントでアクティブスライドを切り替え
-    let scrollTimeout;
-    window.addEventListener('scroll', function() {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(function() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const windowHeight = window.innerHeight;
-            
-            slides.forEach((slide, index) => {
-                const slideTop = slide.offsetTop;
-                const slideHeight = slide.offsetHeight;
-                const slideCenter = slideTop + (slideHeight / 2);
-                const windowCenter = scrollTop + (windowHeight / 2);
-                
-                // スライドが画面の中央付近にある場合
-                if (Math.abs(slideCenter - windowCenter) < windowHeight / 3) {
-                    if (!slide.classList.contains('is-active')) {
-                        // 前のアクティブスライドを削除
-                        document.querySelectorAll('.js-slide.is-active').forEach(s => {
-                            s.classList.remove('is-active');
-                        });
-                        
-                        // 新しいスライドをアクティブに
-                        slide.classList.add('is-active');
-                        currentSlide = index;
-                        console.log('Active slide:', index);
-                    }
-                }
-            });
-        }, 50);
-    });
-}
+
 
 // 横スクロール（デスクトップ用）
 function initHorizontalScroll() {
@@ -218,7 +149,7 @@ function initHorizontalScroll() {
     
     // マウスホイールでの横スクロール
     let wheelHandler = function(e) {
-        if (isLoading || isScrolling) return;
+        if (isLoading) return;
         
         // デフォルトの縦スクロールを防止
         e.preventDefault();
@@ -321,16 +252,10 @@ function scrollToSlide(index) {
         }
     }
     
-    isScrolling = true;
-    
     window.scrollTo({
         top: targetPosition,
         behavior: 'smooth'
     });
-    
-    setTimeout(() => {
-        isScrolling = false;
-    }, 1000);
 }
 
 // スライドアニメーション
@@ -354,60 +279,47 @@ function initSlideAnimations() {
 
 // スライドアニメーションをトリガー
 function triggerSlideAnimations(slide) {
-    // モバイルでは画像が消えないようにアニメーションを制限
-    if (!isMobile) {
-        // デスクトップでのアニメーション
-        const titleSpans = slide.querySelectorAll('.title-line span');
-        titleSpans.forEach((span, index) => {
-            span.style.transform = 'translateY(100%)';
-            setTimeout(() => {
-                span.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                span.style.transform = 'translateY(0)';
-            }, index * 100);
-        });
-        
-        // サブタイトルとディスクリプション
-        const subtitle = slide.querySelector('.slide-subtitle');
-        const description = slide.querySelector('.slide-description');
-        
-        if (subtitle) {
-            subtitle.style.opacity = '0';
-            subtitle.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                subtitle.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                subtitle.style.opacity = '1';
-                subtitle.style.transform = 'translateY(0)';
-            }, 300);
-        }
-        
-        if (description) {
-            description.style.opacity = '0';
-            description.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                description.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                description.style.opacity = '1';
-                description.style.transform = 'translateY(0)';
-            }, 500);
-        }
-        
-        // ホテルアイテムのアニメーション
-        const hotelItems = slide.querySelectorAll('.hotel-item');
-        hotelItems.forEach((item, index) => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(30px)';
-            setTimeout(() => {
-                item.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                item.style.opacity = '1';
-                item.style.transform = 'translateY(0)';
-            }, 200 + (index * 100));
-        });
+    // デスクトップでのアニメーション
+    const titleSpans = slide.querySelectorAll('.title-line span');
+    titleSpans.forEach((span, index) => {
+        span.style.transform = 'translateY(100%)';
+        span.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        span.style.transform = 'translateY(0)';
+    });
+    
+    // サブタイトルとディスクリプション
+    const subtitle = slide.querySelector('.slide-subtitle');
+    const description = slide.querySelector('.slide-description');
+    
+    if (subtitle) {
+        subtitle.style.opacity = '0';
+        subtitle.style.transform = 'translateY(20px)';
+        subtitle.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        subtitle.style.opacity = '1';
+        subtitle.style.transform = 'translateY(0)';
     }
+    
+    if (description) {
+        description.style.opacity = '0';
+        description.style.transform = 'translateY(20px)';
+        description.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        description.style.opacity = '1';
+        description.style.transform = 'translateY(0)';
+    }
+    
+    // ホテルアイテムのアニメーション
+    const hotelItems = slide.querySelectorAll('.hotel-item');
+    hotelItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        item.style.opacity = '1';
+        item.style.transform = 'translateY(0)';
+    });
 }
 
 // チルト効果（デスクトップのみ）
 function initTiltEffect() {
-    if (isMobile) return;
-    
     const tiltElements = document.querySelectorAll('.js-tilt');
     
     if (tiltElements.length === 0) return;
@@ -462,45 +374,6 @@ function ensureVideoPlayback() {
         });
     }
 }
-
-// リサイズ処理
-let resizeTimer;
-window.addEventListener('resize', function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function() {
-        const wasMobile = isMobile;
-        isMobile = window.innerWidth <= 768;
-        
-        // モバイル/デスクトップ切り替え時の処理
-        if (wasMobile !== isMobile) {
-            // 既存のObserverを削除
-            if (mobileScrollObserver) {
-                mobileScrollObserver.disconnect();
-                mobileScrollObserver = null;
-            }
-            
-            // 適切なスクロールを再初期化
-            if (isMobile) {
-                // デスクトップからモバイルに切り替え
-                document.body.style.height = 'auto';
-                const scrollContent = document.querySelector('[data-scroll-content]');
-                if (scrollContent) {
-                    scrollContent.style.transform = 'none';
-                }
-                initMobileScroll();
-            } else {
-                // モバイルからデスクトップに切り替え
-                initHorizontalScroll();
-            }
-        } else if (!isMobile) {
-            // デスクトップでのリサイズ
-            initHorizontalScroll();
-        }
-    }, 250);
-});
-
-// ビデオの再生を確認
-setTimeout(ensureVideoPlayback, 2000);
 
 // 画像エラーハンドリング
 function initImageErrorHandling() {

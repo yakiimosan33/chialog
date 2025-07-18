@@ -20,14 +20,12 @@
 /* ベーススタイル */
 html {
     font-size: 16px;
-    overflow: hidden;
 }
 
 body {
     font-family: var(--font-secondary);
     color: var(--color-text);
     background-color: var(--color-bg);
-    overflow: hidden;
     height: 100vh;
     position: relative;
 }
@@ -348,9 +346,9 @@ body {
     .slide-description,
     .hotel-item,
     .title-line span {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
+        opacity: 1;
+        transform: none;
+        transition: none;
     }
 }
 
@@ -784,7 +782,7 @@ body {
     }
 
     body {
-        height: auto !important;
+        height: auto;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -809,7 +807,7 @@ body {
 
     .scroll-content {
         position: static;
-        transform: none !important;
+        transform: none;
         flex-direction: column;
         height: auto;
         display: block;
@@ -887,8 +885,8 @@ body {
         flex: 0 0 auto;
         max-width: 100%;
         margin-bottom: 2rem;
-        opacity: 1 !important;
-        transform: none !important;
+        opacity: 1;
+        transform: none;
     }
 
     .hotel-item__image img {
@@ -938,9 +936,9 @@ body {
     .scroll,
     .scroll-content,
     .scroll-content--last {
-        position: static !important;
-        transform: none !important;
-        height: auto !important;
-        overflow: visible !important;
+        position: static;
+        transform: none;
+        height: auto;
+        overflow: visible;
     }
 }
